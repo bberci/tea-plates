@@ -1,102 +1,53 @@
 const express = require('express');
-const session = require('express-session');
+const mongoose = require('mongoose');
+const Plate = require('./models/plate');
 const app = express();
 
-// Configure session middleware
-app.use(
-  session({
-    secret: 'mysecret',
-    resave: false,
-    saveUninitialized: true
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+mongoose
+  .connect('mongodb+srv://bberrci:<password>@plates.jlccxom.mongodb.net/?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
-);
-
-// Define a route for the home page
-app.get('/', (req, res) => {
-  let licensePlates = [];
-  const prefix = 'TEA-';
-
-  // Generate license plates from TEA-001 to TEA-999
-  for (let i = 1; i <= 999; i++) {
-    let licensePlateNumber = i.toString().padStart(3, '0');
-    licensePlates.push({ plate: prefix + licensePlateNumber, isOwned: false });
-  }
-
-  // Get the user input from the query parameters
-  const userInput = req.query.license || '';
-
-  // Get the ownership information from the session
-  const ownedPlates = req.session.ownedPlates || [];
-
-  // Mark the user's plate as owned
-  if (userInput && !ownedPlates.includes(userInput.toLowerCase())) {
-    ownedPlates.push(userInput.toLowerCase());
-    req.session.ownedPlates = ownedPlates;
-  }
-
-  // Set the ownership status for license plates
-  licensePlates.forEach((plate) => {
-    plate.isOwned = ownedPlates.includes(plate.plate.toLowerCase());
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('Failed to connect to MongoDB:', err);
   });
 
-  // Render the license plates as tokens in rows
-  const platesPerRow = 10; // Number of plates per row
-  const tokenRows = [];
-  for (let i = 0; i < licensePlates.length; i += platesPerRow) {
-    const row = licensePlates.slice(i, i + platesPerRow);
-    const tokenList = row
-      .map((plate) => {
-        // Determine the token's color based on ownership
-        const tokenColor = plate.isOwned ? '#9aff9a' : '#ffcccc';
-        return `<li class="token" style="background-color: ${tokenColor};">${plate.plate}</li>`;
-      })
-      .join('');
-    tokenRows.push(`<ul class="token-row">${tokenList}</ul>`);
-  }
-
-  // Construct the HTML response
-  const html = `
-    <html>
-      <head>
-        <style>
-          .token {
-            display: inline-block;
-            padding: 10px 15px;
-            margin: 5px;
-            border-radius: 20px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
-            text-transform: uppercase;
-          }
-          
-          .token-row {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-          }
-        </style>
-      </head>
-      <body>
-        <h1>License Plates</h1>
-        <form action="/" method="GET">
-          <label for="license">License Plate:</label>
-          <input type="text" id="license" name="license" value="${userInput}" pattern="[a-zA-Z]{3}-[0-9]{3}" title="Enter a license plate in the format abc-123" required>
-          <button type="submit">Submit</button>
-        </form>
-        <br>
-        ${tokenRows.join('<br>')}
-      </body>
-    </html>
-  `;
-
-  res.send(html);
+app.get('/', (req, res) => {
+  Plate.find()
+    .then((plates) => {
+      res.render('index', { plates });
+    })
+    .catch((err) => {
+      console.error('Failed to fetch plates:', err);
+      res.status(500).send('Failed to fetch plates');
+    });
 });
 
-// Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.post('/add-plate', (req, res) => {
+  const plateNumber = req.body.plateNumber.toLowerCase();
+
+  const newPlate = new Plate({
+    plateNumber: plateNumber,
+  });
+
+  newPlate
+    .save()
+    .then(() => {
+      res.redirect('/');
+    })
+    .catch((err) => {
+      console.error('Failed to save plate:', err);
+      res.status(500).send('Failed to save plate');
+    });
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server started on port 3000');
 });

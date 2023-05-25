@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TEA Plates</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>TEA Plates</h1>
+      <div class="input-container">
+        <form action="/add-plate" method="POST">
+          <input type="text" name="plateNumber" placeholder="Enter a plate number (abc-123)" required />
+          <button type="submit">Add Plate</button>
+        </form>
+      </div>
+      <div class="plates-container">
+        <% plates.forEach((plate) => { %>
+          <div class="plate <%= plate.owned ? 'owned' : '' %>">
+            <%= plate.plateNumber %>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </body>
+</html>
