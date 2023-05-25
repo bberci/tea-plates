@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Plate = require('./models/plate');
+const timeout = 20000;
 const app = express();
 
 app.set('view engine', 'ejs');
