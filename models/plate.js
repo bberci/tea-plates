@@ -5,6 +5,10 @@ const plateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  owned: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Plate = mongoose.model('Plate', plateSchema);
