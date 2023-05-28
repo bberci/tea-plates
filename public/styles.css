@@ -1,30 +1,93 @@
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .input-container {
-    margin-bottom: 20px;
-  }
-  
-  .plates-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .plate {
-    display: inline-block;
-    margin: 5px;
-    padding: 10px;
-    border-radius: 20px;
-    font-size: 16px;
-    background-color: #ff8080;
-    color: white;
-  }
-  
-  .plate.owned {
-    background-color: #80ff80;
-  }
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.input-container input[type="text"] {
+  flex: flex;
+  justify-content: center;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #888888;
+  border-radius: 4px;
+  outline: none;
+}
+
+.input-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #80ff80;
+  color: white;
+  cursor: pointer;
+}
+
+.input-container-two {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.input-container-two input[type="text"] {
+  flex: flex;
+  justify-content: center;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #888888;
+  border-radius: 4px;
+  outline: none;
+}
+
+.input-container-two button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ff8080;
+  color: white;
+  cursor: pointer;
+}
+
+.counter {
+  margin-bottom: 20px;
+  font-size: 18px;
+  background-color: #f2f2f2;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
+}
+
+.plates-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.plate {
+  display: inline-block;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #ff8080;
+  color: white;
+}
+
+.plate.owned {
+  background-color: #80ff80;
+}

@@ -23,13 +23,20 @@ mongoose
     Plate.find()
       .then((plates) => {
         const plateNumbers = plates.map((plate) => plate.plateNumber);
-        res.render('index', { plates: plateNumbers });
+        const ownedCount = plateNumbers.filter(isOwned).length;
+        const totalPlates = 999; // Total number of plates from TEA-001 to TEA-999
+        res.render('index', { plates: plateNumbers, ownedCount, totalPlates });
+        console.log(plateNumbers);
       })
       .catch((err) => {
         console.error('Failed to fetch plates:', err);
         res.status(500).send('Failed to fetch plates');
       });
   });
+
+  function isOwned(plate) {
+    return !plate.owned;
+  }
   
   app.post('/add-plate', (req, res) => {
     const plateNumber = req.body.plateNumber.toUpperCase();
