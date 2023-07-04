@@ -39,34 +39,34 @@ mongoose
   }
   
   app.post('/add-plate', (req, res) => {
-    const plateNumber = req.body.plateNumber.toUpperCase();
-  
-    Plate.findOne({ plateNumber: plateNumber }) // Check if the plate already exists
-      .then((plate) => {
-        if (plate) {
-          // Plate already exists, display a pop-up window or message
-          res.send('<script>alert("Plate already exists"); window.location.href="/";</script>');
-        } else {
-          const newPlate = new Plate({
-            plateNumber: plateNumber,
+  const plateNumber = req.body.plateNumber.toUpperCase();
+
+  Plate.findOne({ plateNumber: plateNumber }) // Check if the plate already exists
+    .then((plate) => {
+      if (plate) {
+        // Plate already exists, display a pop-up window or message
+        res.send('<script>alert("Plate already exists"); window.location.href="/";</script>');
+      } else {
+        const newPlate = new Plate({
+          plateNumber: plateNumber,
+        });
+
+        newPlate
+          .save()
+          .then(() => {
+            res.redirect('/');
+          })
+          .catch((err) => {
+            console.error('Failed to save plate:', err);
+            res.status(500).send('Failed to save plate');
           });
-  
-          newPlate
-            .save()
-            .then(() => {
-              res.redirect('/');
-            })
-            .catch((err) => {
-              console.error('Failed to save plate:', err);
-              res.status(500).send('Failed to save plate');
-            });
-        }
-      })
-      .catch((err) => {
-        console.error('Error finding plate:', err);
-        res.status(500).send('Error finding plate');
-      });
-  });
+      }
+    })
+    .catch((err) => {
+      console.error('Error finding plate:', err);
+      res.status(500).send('Error finding plate');
+    });
+});
 
   app.post('/delete-plate', (req, res) => {
     const plateNumber = req.body.plateNumber.toUpperCase();
