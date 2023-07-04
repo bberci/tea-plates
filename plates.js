@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const Plate = require('./models/plate');
 const app = express();
 
+app.get('/', (req, res) => {
+  res.redirect('/plates');
+});
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -19,13 +22,13 @@ mongoose
     console.error('Failed to connect to MongoDB:', err);
   });
 
-  app.get('/', (req, res) => {
+  app.get('/plates', (req, res) => {
     Plate.find()
       .then((plates) => {
         const plateNumbers = plates.map((plate) => plate.plateNumber);
         const ownedCount = plateNumbers.filter(isOwned).length;
         const totalPlates = 999; // Total number of plates from TEA-001 to TEA-999
-        res.render('index', { plates: plateNumbers, ownedCount, totalPlates });
+        res.render('plates', { plates: plateNumbers, ownedCount, totalPlates });
         console.log(plateNumbers);
       })
       .catch((err) => {
