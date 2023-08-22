@@ -3,9 +3,6 @@ const mongoose = require('mongoose');
 const Plate = require('./models/plate');
 const app = express();
 
-app.get('/', (req, res) => {
-  res.redirect('/plates');
-});
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -22,7 +19,7 @@ mongoose
     console.error('Failed to connect to MongoDB:', err);
   });
 
-  app.get('/plates', (req, res) => {
+  app.get('/', (req, res) => {
     Plate.find()
       .then((plates) => {
         const plateNumbers = plates.map((plate) => plate.plateNumber);
