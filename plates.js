@@ -83,7 +83,7 @@ mongoose
   
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
-    console.log('Server started on port lofasz' + PORT);
+    console.log('Server started on port: ' + PORT);
   });
   
   function generatePlateNumbers() {
